@@ -1,0 +1,32 @@
+name: 'diligence-fuzzing'
+description: 'run diligence fuzzing cli'
+author: 'Diligence'
+
+inputs:
+  fuzz_api_key:
+    description: 'fuzzing api key'
+    required: true
+  fuzz_project:
+    required: false
+    description: 'Project name'
+    default: ${{ github.repository }}
+
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v3
+
+  - name: Install Foundry
+    uses: foundry-rs/foundry-toolchain@v1
+
+  - name: Install diligence fuzzing
+    run: pip3 install diligence-fuzzing
+    shell: bash
+
+  - name: Run fuzz foundry
+    env:
+      FUZZ_API_KEY: ${{ inputs.fuzz_api_key }}
+      FUZZ_PROJECT: ${{ inputs.fuzz_project }}
+      FUZZ_TIME_LIMIT: 1h
+    run: fuzz forge test
+    shell: bash
