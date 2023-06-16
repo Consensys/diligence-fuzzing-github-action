@@ -1,8 +1,19 @@
 name: 'diligence-fuzzing'
 description: 'run diligence fuzzing cli'
 author: 'Diligence'
+branding:
+  icon: 'bar-chart-2'
+  color: 'white'
 
 inputs:
+  checkout:
+    description: 'if we need to checkout the code'
+    required: false
+    default: 'true'
+  install_foundry:
+    description: 'if we need to install foundry-toolchain'
+    required: false
+    default: 'true'
   fuzz_api_key:
     description: 'fuzzing api key'
     required: true
@@ -10,13 +21,20 @@ inputs:
     required: false
     description: 'Project name'
     default: ${{ github.repository }}
+  fuzz_time_limit:
+    required: false
+    description: ''
+    default: '1h'
 
 runs:
   using: "composite"
   steps:
-  - uses: actions/checkout@v3
+  - name: Checkout (if needed)
+    if: ${{ inputs.checkout == 'true' }}
+    uses: actions/checkout@v3
 
   - name: Install Foundry
+    if: ${{ inputs.install_foundry == 'true' }}
     uses: foundry-rs/foundry-toolchain@v1
 
   - name: Install diligence fuzzing
@@ -27,6 +45,6 @@ runs:
     env:
       FUZZ_API_KEY: ${{ inputs.fuzz_api_key }}
       FUZZ_PROJECT: ${{ inputs.fuzz_project }}
-      FUZZ_TIME_LIMIT: 1h
+      FUZZ_TIME_LIMIT: ${{ inputs.fuzz_time_limit }}
     run: fuzz forge test
     shell: bash
