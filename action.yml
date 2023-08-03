@@ -7,23 +7,23 @@ branding:
 
 inputs:
   checkout:
-    description: 'if we need to checkout the code'
+    description: 'Flag to control if the action should check out your repository using actions/checkout@v3.'
     required: false
     default: 'true'
   install_foundry:
-    description: 'if we need to install foundry-toolchain'
+    description: 'Flag to control if the action should install Foundry using foundry-rs/foundry-toolchain@v1.'
     required: false
     default: 'true'
   fuzz_api_key:
-    description: 'fuzzing api key'
+    description: 'The API key used to submit campaigns to the Diligence Fuzzing API. '
     required: true
   fuzz_project:
     required: false
-    description: 'Project name'
+    description: 'The name of the project to add submitted campaigns to.'
     default: ${{ github.repository }}
   fuzz_time_limit:
     required: false
-    description: ''
+    description: 'The time limit for each individual fuzzing job (e.g., 10m, 1h, 30s).'
     default: '1h'
 
 runs:
